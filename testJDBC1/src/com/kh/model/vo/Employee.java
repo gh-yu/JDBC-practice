@@ -15,13 +15,12 @@ public class Employee {
 	public Employee() {}
 	public Employee(int empNo, String empName, String job, int mgr, 
 					Date hireDate, int sal, int comm, int deptNo) {
-		this(empNo, empName, job, mgr, sal, comm);
+		this(empNo, empName, job, mgr, sal, comm, deptNo);
 		this.setHireDate(hireDate);
-		this.setDeptNo(deptNo);
 	}
 	
 	public Employee(int empNo, String empName, String job, int mgr, 
-					int sal, int comm) {
+					int sal, int comm, int deptNo) {
 		this(empNo, job, sal, comm);
 		this.empName = empName;
 		this.mgr = mgr;
