@@ -124,11 +124,17 @@ public class MemberDAO {
 		// 다시 말하면 내가 원하는 데이터에 %나 _와 같은 와일드 카드가 있어야 함
 		// 따라서 123번째 줄을 id라고만 넣는게 아니라  '% 와 %' 사이에 들어가게 해야함
 		
+		// 쿼리문에 like를 쓸 때 ' ' 안에 검색하고자 하는 데이터를 넣음
+		//       ex. select * from emp where emp_name like '%연%';
+		// Statement를 사용할 때는 ''를 사용하지만 PreparedStatement를 사용할 때는 그렇지 않음
+		// 그 이유는 PreparedStatement는 ?(위치홀더) 자리에 데이터가 들어가면 자동으로 그 데이터를 ''으로 감싸주기 때문에 따로 표기하지 않아도 됨
+		// 위치홀더를 사용하면 자동으로 싱글쿼테이션이 앞뒤로 붙음(데이터형이 리터럴형이 됨)
+		// 즉, 위치홀더가 있느냐 없느냐의 차이(매우 중요★, 기억하기)
+		
 		try {
 //			pstmt = conn.prepareStatement(query);
 //			pstmt.setString(1, "%" + id + "%");
 //			rset = pstmt.executeQuery();
-			// PreparedStatement를 쓸때 위치홀더를 사용하면 위치홀더 자리에 데이터가 들어갈때 자동으로 ''으로 감싸주기때문에 따로 표기하지 않아도 된다
 			
 			stmt = conn.createStatement();
 			rset = stmt.executeQuery(query);
@@ -202,7 +208,7 @@ public class MemberDAO {
 		ResultSet rset = null;
 		int result = 0;
 		
-		String query = prop.getProperty("checkMember"); // 해당 회원ID와 일치하는 회원 몇 명인지 count함수 씀
+		String query = prop.getProperty("checkMember"); // 해당 회원ID와 일치하는 회원 있는지 없는지 확인 위해 count함수 씀
 		// checkMember=SELECT COUNT(*) FROM MEMBER WHERE MEMBER_ID = ?
 		
 		try {
@@ -210,9 +216,11 @@ public class MemberDAO {
 			pstmt.setString(1, memberId);
 			rset = pstmt.executeQuery();
 			
-			if(rset.next()) { // SELECT COUNT(*) 실행하면 결과 값(행)은 1개
-//				result = rset.getInt("conut(*)"); // count함수 결과 데이터 int값
-				result = rset.getInt(1); // 컬럼의 순번
+			if(rset.next()) { // SELECT COUNT(*) 실행하면 결과(행)는 무조건 1개
+//				result = rset.getInt("conut(*)"); // count함수 결과 데이터 int값(일치하는 회원이 있으면 1, 없으면 0일 것임)
+				result = rset.getInt(1); 
+				// ResultSet의 컬럼명(String columnLabel) 대신 컬럼의 순번(int columnIndex)으로도 가져올 수 있음
+				// 컬럼이름으로 쓰는 것을 추천(더 직관적이기 때문에) 
 			}
 			
 		} catch (SQLException e) {
@@ -233,6 +241,7 @@ public class MemberDAO {
 		String query = prop.getProperty("updateMember" + sel); // key값 updateMember1, ... , updateMembe4까지 쿼리문 따로 작성
 		// updateMember1=UPDATE MEMBER SET MEMBER_PWD = ? WHERE MEMBER_ID = ?
 		// updateMember2=UPDATE MEMBER SET EMAIL = ? WHERE MEMBER_ID = ?
+		// PreparedStatement의 위치홀더 사용하면 '' 자동으로 붙여지기 때문에 EMAIL과 같은 컬럼명에는 ''붙이면 안돼서 4가지 update문 따로 작성
 		
 		try {
 			pstmt = conn.prepareStatement(query);

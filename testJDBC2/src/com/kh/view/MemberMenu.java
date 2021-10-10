@@ -114,6 +114,8 @@ public class MemberMenu {
 	}
 
 	public int updateMember() {
+		System.out.println("\n *** ID가 확인되었습니다 ***\n");
+		
 		while (true) {
 			System.out.println("1. 비밀번호 변경");
 			System.out.println("2. 이메일 변경");
@@ -131,7 +133,7 @@ public class MemberMenu {
 	}
 
 	public String inputUpdate() {
-		System.out.print("수정할 데이터 입력 : ");
+		System.out.print("수정 값 입력 : ");
 		String input = sc.nextLine();
 		
 		return input;

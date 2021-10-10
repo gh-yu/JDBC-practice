@@ -67,7 +67,7 @@ public class MemberController {
 		int check = mService.checkMember(memberId); // id일치하는 회원 있으면 1 반환됨 없으면 0
 		
 		if (check != 1) {
-			menu.displayError("존재하지 않는 회원입니다.");
+			menu.displayError("입력한 아이디가 존재하지 않습니다.");
 		} else {
 			int sel = menu.updateMember();
 			
@@ -94,7 +94,7 @@ public class MemberController {
 		int check = mService.checkMember(memberId);
 		
 		if(check != 1) {
-			menu.displayError("존재하지 않는 회원입니다");
+			menu.displayError("입력한 아이디가 존재하지 않습니다.");
 		} else {
 			
 			char yn = menu.checkDelete();
